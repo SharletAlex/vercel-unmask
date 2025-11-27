@@ -1,6 +1,7 @@
 "use client"
 
 import Link from "next/link"
+import Image from "next/image"
 import { useRouter } from "next/navigation"
 import { ImageIcon, Video, ArrowLeft, Sparkles } from "lucide-react"
 import { GlassCard } from "@/components/ui/glass-card"
@@ -10,6 +11,11 @@ export default function DetectPage() {
 
   return (
     <main className="min-h-screen bg-background flex items-center justify-center px-4 relative overflow-hidden">
+      <div className="absolute inset-0 pointer-events-none">
+        <Image src="/images/detect-bg.jpg" alt="" fill className="object-cover opacity-[0.1]" priority />
+        <div className="absolute inset-0 bg-gradient-to-t from-background via-background/85 to-background" />
+      </div>
+
       {/* Base gradients */}
       <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,rgba(59,130,246,0.1),transparent_70%)]" />
       <div className="absolute top-0 left-1/3 w-[500px] h-[500px] bg-primary/5 rounded-full blur-3xl" />

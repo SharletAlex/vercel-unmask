@@ -11,13 +11,13 @@
   --popover: rgba(20, 20, 35, 0.9);
   --popover-foreground: #ffffff;
   --primary: #3b82f6;
-  --primary-foreground: #ffffff;
+  --primary-foreground: #0a0a0a;
   --secondary: #a855f7;
-  --secondary-foreground: #ffffff;
+  --secondary-foreground: #0a0a0a;
   --muted: #1a1a2e;
   --muted-foreground: #a0a0b0;
   --accent: #a855f7;
-  --accent-foreground: #ffffff;
+  --accent-foreground: #0a0a0a;
   --destructive: #ef4444;
   --destructive-foreground: #ffffff;
   --border: rgba(59, 130, 246, 0.2);
@@ -47,13 +47,13 @@
   --popover: rgba(20, 20, 35, 0.9);
   --popover-foreground: #ffffff;
   --primary: #3b82f6;
-  --primary-foreground: #ffffff;
+  --primary-foreground: #0a0a0a;
   --secondary: #a855f7;
-  --secondary-foreground: #ffffff;
+  --secondary-foreground: #0a0a0a;
   --muted: #1a1a2e;
   --muted-foreground: #a0a0b0;
   --accent: #a855f7;
-  --accent-foreground: #ffffff;
+  --accent-foreground: #0a0a0a;
   --destructive: #ef4444;
   --destructive-foreground: #ffffff;
   --border: rgba(59, 130, 246, 0.2);
@@ -70,8 +70,13 @@
 }
 
 @theme inline {
-  --font-sans: "Inter", "Inter Fallback";
+  --font-sans: var(--font-inter), "Inter", "Inter Fallback";
   --font-mono: "JetBrains Mono", "Courier New", monospace;
+  /* Added custom font families */
+  --font-orbitron: var(--font-orbitron), "Orbitron", sans-serif;
+  --font-audiowide: var(--font-audiowide), "Audiowide", sans-serif;
+  --font-rajdhani: var(--font-rajdhani), "Rajdhani", sans-serif;
+  --font-exo2: var(--font-exo2), "Exo 2", sans-serif;
   --color-background: var(--background);
   --color-foreground: var(--foreground);
   --color-card: var(--card);
@@ -108,21 +113,6 @@
   --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
   --color-sidebar-border: var(--sidebar-border);
   --color-sidebar-ring: var(--sidebar-ring);
-
-  /* Add custom animation utilities */
-  --animate-scanline-move: scanline-move 2s linear infinite;
-  --animate-radar-rotate: radar-rotate 3s linear infinite;
-  --animate-pulse-ring: pulse-ring 2s ease-in-out infinite;
-  --animate-glitch-float: glitch-float 4s ease-in-out infinite;
-  --animate-grid-scan: grid-scan 8s linear infinite;
-  --animate-neon-pulse: neon-pulse 2s ease-in-out infinite;
-  --animate-hologram-flicker: hologram-flicker 0.5s ease-in-out infinite;
-  --animate-float-slow: float-slow 6s ease-in-out infinite;
-  --animate-hex-rotate: hex-rotate 20s linear infinite;
-  --animate-particle-drift: particle-drift 10s ease-in-out infinite;
-  --animate-wave-flow: wave-flow 8s ease-in-out infinite;
-  --animate-crosshair-pulse: crosshair-pulse 1.5s ease-in-out infinite;
-  --animate-color-shift: color-shift 4s ease-in-out infinite;
 }
 
 @layer base {
@@ -134,7 +124,99 @@
   }
 }
 
-/* Forensic Loader Animations */
+/* Custom font utility classes */
+.font-orbitron {
+  font-family: var(--font-orbitron), "Orbitron", sans-serif;
+}
+
+.font-audiowide {
+  font-family: var(--font-audiowide), "Audiowide", sans-serif;
+}
+
+.font-rajdhani {
+  font-family: var(--font-rajdhani), "Rajdhani", sans-serif;
+}
+
+.font-exo2 {
+  font-family: var(--font-exo2), "Exo 2", sans-serif;
+}
+
+/* Neon glow text effects */
+.text-neon-blue {
+  color: #3b82f6;
+  text-shadow: 0 0 10px rgba(59, 130, 246, 0.8), 0 0 20px rgba(59, 130, 246, 0.6), 0 0 30px rgba(59, 130, 246, 0.4);
+}
+
+.text-neon-purple {
+  color: #a855f7;
+  text-shadow: 0 0 10px rgba(168, 85, 247, 0.8), 0 0 20px rgba(168, 85, 247, 0.6), 0 0 30px rgba(168, 85, 247, 0.4);
+}
+
+.text-hologram {
+  background: linear-gradient(135deg, #3b82f6, #60a5fa, #3b82f6);
+  background-size: 200% 200%;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  animation: hologram-shift 3s ease-in-out infinite;
+  filter: drop-shadow(0 0 10px rgba(59, 130, 246, 0.5));
+}
+
+@keyframes hologram-shift {
+  0%,
+  100% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+}
+
+/* New forensic scan animations */
+@keyframes forensic-scan {
+  0% {
+    top: 0%;
+  }
+  100% {
+    top: 100%;
+  }
+}
+
+@keyframes forensic-scan-delayed {
+  0% {
+    top: -10%;
+  }
+  100% {
+    top: 110%;
+  }
+}
+
+@keyframes data-point {
+  0%,
+  100% {
+    opacity: 0;
+    transform: scale(0);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+.animate-forensic-scan {
+  animation: forensic-scan 2s linear infinite;
+}
+
+.animate-forensic-scan-delayed {
+  animation: forensic-scan-delayed 2.5s linear infinite;
+  animation-delay: 0.5s;
+}
+
+.animate-data-point {
+  animation: data-point 2s ease-in-out infinite;
+}
+
+/* Existing animations */
 @keyframes scanline-move {
   0% {
     transform: translateY(-100%);
@@ -185,15 +267,6 @@
   }
 }
 
-@keyframes grid-scan {
-  0% {
-    background-position: 0% 0%;
-  }
-  100% {
-    background-position: 100% 100%;
-  }
-}
-
 @keyframes neon-pulse {
   0%,
   100% {
@@ -214,26 +287,14 @@
   10% {
     opacity: 0.8;
   }
-  20% {
-    opacity: 1;
-  }
   30% {
     opacity: 0.6;
-  }
-  40% {
-    opacity: 1;
   }
   50% {
     opacity: 0.9;
   }
-  60% {
-    opacity: 1;
-  }
   70% {
     opacity: 0.7;
-  }
-  80% {
-    opacity: 1;
   }
   90% {
     opacity: 0.85;
@@ -281,67 +342,6 @@
   }
 }
 
-@keyframes wave-flow {
-  0% {
-    transform: translateX(-100%);
-  }
-  100% {
-    transform: translateX(100%);
-  }
-}
-
-@keyframes crosshair-pulse {
-  0%,
-  100% {
-    transform: scale(1);
-    opacity: 0.8;
-  }
-  50% {
-    transform: scale(1.1);
-    opacity: 1;
-  }
-}
-
-@keyframes color-shift {
-  0%,
-  100% {
-    filter: hue-rotate(0deg);
-  }
-  50% {
-    filter: hue-rotate(30deg);
-  }
-}
-
-@keyframes scan {
-  0% {
-    transform: translateY(-100%);
-  }
-  100% {
-    transform: translateY(100%);
-  }
-}
-
-@keyframes glitch {
-  0% {
-    transform: translate(0);
-  }
-  20% {
-    transform: translate(-2px, 2px);
-  }
-  40% {
-    transform: translate(-2px, -2px);
-  }
-  60% {
-    transform: translate(2px, 2px);
-  }
-  80% {
-    transform: translate(2px, -2px);
-  }
-  100% {
-    transform: translate(0);
-  }
-}
-
 @keyframes pulse-glow {
   0%,
   100% {
@@ -374,7 +374,6 @@
   }
 }
 
-/* Added float-delayed, float-particle keyframes for landing page images */
 @keyframes float-delayed {
   0%,
   100% {
@@ -385,31 +384,40 @@
   }
 }
 
-@keyframes float-particle {
+/* Neural network animation */
+@keyframes neural-pulse {
   0%,
   100% {
-    transform: translateY(0) scale(1);
-    opacity: 0.6;
+    stroke-dashoffset: 0;
+    opacity: 0.3;
   }
   50% {
-    transform: translateY(-20px) scale(1.2);
+    stroke-dashoffset: 20;
     opacity: 1;
   }
 }
 
+@keyframes node-glow {
+  0%,
+  100% {
+    filter: drop-shadow(0 0 2px rgba(59, 130, 246, 0.5));
+    transform: scale(1);
+  }
+  50% {
+    filter: drop-shadow(0 0 8px rgba(59, 130, 246, 1));
+    transform: scale(1.1);
+  }
+}
+
+.animate-neural-pulse {
+  animation: neural-pulse 3s ease-in-out infinite;
+}
+
+.animate-node-glow {
+  animation: node-glow 2s ease-in-out infinite;
+}
+
 /* Animation utility classes */
-.animate-scan {
-  animation: scan 2s linear infinite;
-}
-.animate-glitch {
-  animation: glitch 0.3s ease-in-out infinite;
-}
-.animate-pulse-glow {
-  animation: pulse-glow 2s ease-in-out infinite;
-}
-.animate-float {
-  animation: float 3s ease-in-out infinite;
-}
 .animate-scanline-move {
   animation: scanline-move 2s linear infinite;
 }
@@ -421,9 +429,6 @@
 }
 .animate-glitch-float {
   animation: glitch-float 4s ease-in-out infinite;
-}
-.animate-grid-scan {
-  animation: grid-scan 8s linear infinite;
 }
 .animate-neon-pulse {
   animation: neon-pulse 2s ease-in-out infinite;
@@ -440,26 +445,18 @@
 .animate-particle-drift {
   animation: particle-drift 10s ease-in-out infinite;
 }
-.animate-wave-flow {
-  animation: wave-flow 8s ease-in-out infinite;
+.animate-pulse-glow {
+  animation: pulse-glow 2s ease-in-out infinite;
 }
-.animate-crosshair-pulse {
-  animation: crosshair-pulse 1.5s ease-in-out infinite;
+.animate-float {
+  animation: float 3s ease-in-out infinite;
 }
-.animate-color-shift {
-  animation: color-shift 4s ease-in-out infinite;
-}
-
-/* Added animation utility classes for new animations */
 .animate-float-delayed {
   animation: float-delayed 4s ease-in-out infinite;
   animation-delay: 1s;
 }
 
-.animate-float-particle {
-  animation: float-particle 3s ease-in-out infinite;
-}
-
+/* Glass panel styling */
 .glass-panel {
   background: rgba(20, 20, 35, 0.6);
   backdrop-filter: blur(12px);
@@ -474,7 +471,6 @@
   box-shadow: 0 0 20px rgba(168, 85, 247, 0.4), 0 0 40px rgba(168, 85, 247, 0.2);
 }
 
-/* Forensic loader specific styles */
 .forensic-grid {
   background-image: linear-gradient(rgba(59, 130, 246, 0.1) 1px, transparent 1px),
     linear-gradient(90deg, rgba(59, 130, 246, 0.1) 1px, transparent 1px);

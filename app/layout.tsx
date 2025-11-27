@@ -1,12 +1,15 @@
 import type React from "react"
 import type { Metadata } from "next"
-import { Inter, JetBrains_Mono } from "next/font/google"
+import { Inter, Orbitron, Audiowide, Rajdhani, Exo_2 } from "next/font/google"
 import { Analytics } from "@vercel/analytics/next"
 import { AIBackground } from "@/components/ai-background"
 import "./globals.css"
 
-const _inter = Inter({ subsets: ["latin"] })
-const _jetbrainsMono = JetBrains_Mono({ subsets: ["latin"] })
+const _inter = Inter({ subsets: ["latin"], variable: "--font-inter" })
+const _orbitron = Orbitron({ subsets: ["latin"], variable: "--font-orbitron" })
+const _audiowide = Audiowide({ weight: "400", subsets: ["latin"], variable: "--font-audiowide" })
+const _rajdhani = Rajdhani({ weight: ["400", "500", "600", "700"], subsets: ["latin"], variable: "--font-rajdhani" })
+const _exo2 = Exo_2({ subsets: ["latin"], variable: "--font-exo2" })
 
 export const metadata: Metadata = {
   title: "UNMASK — Deepfake Detection System",
@@ -38,7 +41,9 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" className="dark">
-      <body className={`font-sans antialiased min-h-screen`}>
+      <body
+        className={`${_inter.variable} ${_orbitron.variable} ${_audiowide.variable} ${_rajdhani.variable} ${_exo2.variable} font-sans antialiased min-h-screen`}
+      >
         <AIBackground />
         <div className="relative z-10">{children}</div>
         <Analytics />

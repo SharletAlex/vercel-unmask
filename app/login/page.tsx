@@ -1,7 +1,7 @@
 "use client"
 
 import type React from "react"
-
+import Image from "next/image"
 import { useState } from "react"
 import Link from "next/link"
 import { useRouter } from "next/navigation"
@@ -17,6 +17,9 @@ export default function LoginPage() {
     password: "",
   })
   const [acceptedTerms, setAcceptedTerms] = useState(false)
+  const [showForgotPassword, setShowForgotPassword] = useState(false)
+  const [resetEmail, setResetEmail] = useState("")
+  const [resetSent, setResetSent] = useState(false)
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
@@ -24,8 +27,31 @@ export default function LoginPage() {
     router.push("/detect")
   }
 
+  const handlePasswordReset = (e: React.FormEvent) => {
+    e.preventDefault()
+    setResetSent(true)
+    setTimeout(() => {
+      setShowForgotPassword(false)
+      setResetSent(false)
+      setResetEmail("")
+    }, 2000)
+  }
+
   return (
     <main className="min-h-screen bg-background flex items-center justify-center px-4 relative overflow-hidden">
+      <div className="absolute inset-0 pointer-events-none">
+        <Image src="/images/login-bg.jpg" alt="" fill className="object-cover opacity-[0.1]" priority />
+        <div className="absolute inset-0 bg-gradient-to-br from-background via-background/90 to-background" />
+      </div>
+
+      <div className="absolute inset-0 pointer-events-none overflow-hidden">
+        <div className="absolute -left-32 top-1/2 -translate-y-1/2 w-[700px] h-[700px] opacity-[0.2]">
+          <Image src="/images/robot-face.jpg" alt="" fill className="object-contain" />
+          <div className="absolute inset-0 bg-gradient-to-l from-background via-background/70 to-transparent" />
+          <div className="absolute inset-0 bg-gradient-to-t from-background via-transparent to-background/50" />
+        </div>
+      </div>
+
       {/* Gradient orbs */}
       <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,rgba(59,130,246,0.15),transparent_50%)]" />
       <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_bottom,rgba(168,85,247,0.15),transparent_50%)]" />
@@ -57,10 +83,10 @@ export default function LoginPage() {
       <div className="absolute bottom-8 right-8 w-20 h-20 border-r-2 border-b-2 border-primary/30 rounded-br-lg" />
 
       <div className="relative z-10 w-full max-w-md space-y-6">
-        {/* Back button */}
+        {/* Back button - uses Rajdhani */}
         <Link
           href="/"
-          className="inline-flex items-center gap-2 text-muted-foreground hover:text-foreground transition-colors"
+          className="inline-flex items-center gap-2 text-muted-foreground hover:text-foreground transition-colors font-rajdhani"
         >
           <ArrowLeft className="w-4 h-4" />
           Back to Home
@@ -69,26 +95,24 @@ export default function LoginPage() {
         {/* Login Card */}
         <GlassCard className="animate-pulse-glow">
           <div className="space-y-6">
-            {/* Header */}
+            {/* Header - uses Orbitron for title */}
             <div className="text-center space-y-2">
-              <h1 className="text-3xl font-bold bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent">
-                UNMASK
-              </h1>
-              <p className="text-muted-foreground">Sign in to continue</p>
+              <h1 className="text-3xl font-bold text-neon-blue font-orbitron">UNMASK</h1>
+              <p className="text-[#cfcfcf] font-rajdhani">Sign in to continue</p>
             </div>
 
             {/* Form */}
             <form onSubmit={handleSubmit} className="space-y-4">
-              {/* Name */}
+              {/* Name - labels use Rajdhani */}
               <div className="space-y-2">
-                <label className="text-sm text-muted-foreground">Name</label>
+                <label className="text-sm text-[#cfcfcf] font-rajdhani">Name</label>
                 <div className="relative">
                   <User className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-muted-foreground" />
                   <input
                     type="text"
                     value={formData.name}
                     onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                    className="w-full pl-11 pr-4 py-3 bg-muted/50 border border-border rounded-xl focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-all"
+                    className="w-full pl-11 pr-4 py-3 bg-muted/50 border border-border rounded-xl focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-all font-rajdhani"
                     placeholder="Enter your name"
                     required
                   />
@@ -97,14 +121,14 @@ export default function LoginPage() {
 
               {/* Email */}
               <div className="space-y-2">
-                <label className="text-sm text-muted-foreground">Email</label>
+                <label className="text-sm text-[#cfcfcf] font-rajdhani">Email</label>
                 <div className="relative">
                   <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-muted-foreground" />
                   <input
                     type="email"
                     value={formData.email}
                     onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                    className="w-full pl-11 pr-4 py-3 bg-muted/50 border border-border rounded-xl focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-all"
+                    className="w-full pl-11 pr-4 py-3 bg-muted/50 border border-border rounded-xl focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-all font-rajdhani"
                     placeholder="Enter your email"
                     required
                   />
@@ -113,21 +137,30 @@ export default function LoginPage() {
 
               {/* Password */}
               <div className="space-y-2">
-                <label className="text-sm text-muted-foreground">Password</label>
+                <div className="flex items-center justify-between">
+                  <label className="text-sm text-[#cfcfcf] font-rajdhani">Password</label>
+                  <button
+                    type="button"
+                    onClick={() => setShowForgotPassword(true)}
+                    className="text-xs text-primary hover:text-primary/80 transition-colors font-rajdhani"
+                  >
+                    Forgot Password?
+                  </button>
+                </div>
                 <div className="relative">
                   <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-muted-foreground" />
                   <input
                     type="password"
                     value={formData.password}
                     onChange={(e) => setFormData({ ...formData, password: e.target.value })}
-                    className="w-full pl-11 pr-4 py-3 bg-muted/50 border border-border rounded-xl focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-all"
+                    className="w-full pl-11 pr-4 py-3 bg-muted/50 border border-border rounded-xl focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-all font-rajdhani"
                     placeholder="Enter your password"
                     required
                   />
                 </div>
               </div>
 
-              {/* Terms Checkbox */}
+              {/* Terms Checkbox - disclaimer uses Inter (sans) */}
               <div
                 className="flex items-start gap-3 p-4 rounded-xl bg-amber-500/5 border border-amber-500/20 cursor-pointer"
                 onClick={() => setAcceptedTerms(!acceptedTerms)}
@@ -137,21 +170,79 @@ export default function LoginPage() {
                 ) : (
                   <Square className="w-5 h-5 text-muted-foreground shrink-0 mt-0.5" />
                 )}
-                <p className="text-xs text-muted-foreground leading-relaxed">
+                <p className="text-xs text-[#cfcfcf] leading-relaxed">
                   I understand that UNMASK is an experimental prototype. The detection model is still under training and{" "}
                   <span className="text-amber-400">NOT fully accurate</span>. Results may be incorrect and should be
                   used for testing purposes only.
                 </p>
               </div>
 
-              {/* Submit Button */}
-              <GlowButton type="submit" className="w-full" size="lg" disabled={!acceptedTerms}>
+              {/* Submit Button - uses Rajdhani */}
+              <GlowButton
+                type="submit"
+                className="w-full font-rajdhani font-semibold tracking-wide"
+                size="lg"
+                disabled={!acceptedTerms}
+              >
                 Login
               </GlowButton>
             </form>
           </div>
         </GlassCard>
       </div>
+
+      {showForgotPassword && (
+        <div className="fixed inset-0 bg-background/80 backdrop-blur-sm flex items-center justify-center z-50 px-4">
+          <GlassCard className="w-full max-w-md">
+            <div className="space-y-6">
+              <div className="text-center space-y-2">
+                <h2 className="text-2xl font-bold text-neon-blue font-orbitron">Reset Password</h2>
+                <p className="text-sm text-[#cfcfcf]">Enter your email and we'll send you a reset link</p>
+              </div>
+
+              {resetSent ? (
+                <div className="text-center py-8 space-y-3">
+                  <div className="w-16 h-16 bg-primary/20 rounded-full flex items-center justify-center mx-auto">
+                    <CheckSquare className="w-8 h-8 text-primary" />
+                  </div>
+                  <p className="text-foreground font-medium font-rajdhani">Reset link sent!</p>
+                  <p className="text-sm text-[#cfcfcf]">Check your email for the password reset link</p>
+                </div>
+              ) : (
+                <form onSubmit={handlePasswordReset} className="space-y-4">
+                  <div className="space-y-2">
+                    <label className="text-sm text-[#cfcfcf] font-rajdhani">Email</label>
+                    <div className="relative">
+                      <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-muted-foreground" />
+                      <input
+                        type="email"
+                        value={resetEmail}
+                        onChange={(e) => setResetEmail(e.target.value)}
+                        className="w-full pl-11 pr-4 py-3 bg-muted/50 border border-border rounded-xl focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-all font-rajdhani"
+                        placeholder="Enter your email"
+                        required
+                      />
+                    </div>
+                  </div>
+
+                  <div className="flex gap-3">
+                    <button
+                      type="button"
+                      onClick={() => setShowForgotPassword(false)}
+                      className="flex-1 px-4 py-3 rounded-xl border border-border hover:bg-muted/50 transition-all font-rajdhani"
+                    >
+                      Cancel
+                    </button>
+                    <GlowButton type="submit" className="flex-1 font-rajdhani font-semibold">
+                      Send Reset Link
+                    </GlowButton>
+                  </div>
+                </form>
+              )}
+            </div>
+          </GlassCard>
+        </div>
+      )}
     </main>
   )
 }

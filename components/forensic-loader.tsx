@@ -7,130 +7,109 @@ interface ForensicLoaderProps {
 }
 
 export function ForensicLoader({ compact = false }: ForensicLoaderProps) {
-  const [visible, setVisible] = useState(false)
+  const [progress, setProgress] = useState(0)
+  const [scanPhase, setScanPhase] = useState<"grid" | "analyze" | "process">("grid")
 
   useEffect(() => {
-    setVisible(true)
-    return () => setVisible(false)
+    const interval = setInterval(() => {
+      setProgress((prev) => {
+        if (prev >= 100) return 100
+        return prev + 1
+      })
+    }, 50)
+
+    // Change scan phases
+    const phaseTimer1 = setTimeout(() => setScanPhase("analyze"), 1500)
+    const phaseTimer2 = setTimeout(() => setScanPhase("process"), 3500)
+
+    return () => {
+      clearInterval(interval)
+      clearTimeout(phaseTimer1)
+      clearTimeout(phaseTimer2)
+    }
   }, [])
 
-  const containerClass = compact
-    ? "absolute inset-0 z-40 rounded-xl overflow-hidden"
-    : "absolute inset-0 z-40 rounded-xl overflow-hidden"
-
   return (
-    <div
-      className={`${containerClass} transition-opacity duration-500 ${visible ? "opacity-100" : "opacity-0"}`}
-      style={{ backgroundColor: "rgba(5, 5, 5, 0.95)" }}
-    >
-      {/* Blur backdrop */}
-      <div className="absolute inset-0 backdrop-blur-sm" />
-
-      {/* Glassy neon border - smaller padding for compact mode */}
+    <div className="absolute inset-0 z-40 rounded-xl overflow-hidden bg-black/90">
       <div
-        className={`absolute ${compact ? "inset-2" : "inset-4"} rounded-xl forensic-border border border-primary/30 overflow-hidden`}
-      >
-        {/* Digital grid background */}
-        <div className="absolute inset-0 forensic-grid animate-grid-scan opacity-30" />
+        className="absolute inset-0"
+        style={{
+          backgroundImage: `
+            linear-gradient(rgba(59, 130, 246, 0.4) 1px, transparent 1px),
+            linear-gradient(90deg, rgba(59, 130, 246, 0.4) 1px, transparent 1px)
+          `,
+          backgroundSize: compact ? "20px 20px" : "30px 30px",
+        }}
+      />
 
-        {/* Animated scanlines moving downward */}
-        <div className="absolute inset-0 overflow-hidden">
-          <div className="absolute w-full h-16 bg-gradient-to-b from-transparent via-primary/20 to-transparent animate-scanline-move" />
-          <div
-            className="absolute w-full h-16 bg-gradient-to-b from-transparent via-secondary/20 to-transparent animate-scanline-move"
-            style={{ animationDelay: "1s" }}
-          />
-        </div>
+      <div
+        className="absolute left-0 right-0 h-1 bg-gradient-to-r from-transparent via-primary to-transparent animate-forensic-scan"
+        style={{
+          boxShadow: "0 0 20px 10px rgba(59, 130, 246, 0.5), 0 0 60px 20px rgba(59, 130, 246, 0.3)",
+        }}
+      />
 
-        {/* Radar sweep rotating 360° - smaller for compact */}
-        <div className="absolute inset-0 flex items-center justify-center">
-          <div className={`relative ${compact ? "w-32 h-32" : "w-48 h-48"}`}>
-            <div
-              className="absolute inset-0 rounded-full border-2 border-primary/30 animate-radar-rotate"
-              style={{
-                background:
-                  "conic-gradient(from 0deg, transparent 0deg, rgba(59, 130, 246, 0.3) 30deg, transparent 60deg)",
-              }}
-            />
-            <div className="absolute inset-2 rounded-full border border-primary/20" />
-            <div className="absolute inset-4 rounded-full border border-secondary/20" />
-            <div className="absolute inset-6 rounded-full border border-primary/10" />
-          </div>
-        </div>
+      <div
+        className="absolute left-0 right-0 h-0.5 bg-gradient-to-r from-transparent via-accent to-transparent animate-forensic-scan-delayed"
+        style={{
+          boxShadow: "0 0 15px 5px rgba(168, 85, 247, 0.5)",
+        }}
+      />
 
-        {/* Pulsing neon ring - smaller for compact */}
-        <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
-          <div
-            className={`${compact ? "w-24 h-24" : "w-40 h-40"} rounded-full border-2 border-primary/50 animate-pulse-ring`}
-          />
-          <div
-            className={`absolute ${compact ? "w-28 h-28" : "w-48 h-48"} rounded-full border border-secondary/30 animate-pulse-ring`}
-            style={{ animationDelay: "0.5s" }}
-          />
-        </div>
-
-        {/* Scanning crosshair - smaller for compact */}
-        <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
-          <div className={`relative ${compact ? "w-20 h-20" : "w-32 h-32"} animate-crosshair-pulse`}>
-            <div className="absolute top-0 left-1/2 -translate-x-1/2 w-0.5 h-4 bg-gradient-to-b from-primary to-transparent" />
-            <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-0.5 h-4 bg-gradient-to-t from-primary to-transparent" />
-            <div className="absolute left-0 top-1/2 -translate-y-1/2 w-4 h-0.5 bg-gradient-to-r from-primary to-transparent" />
-            <div className="absolute right-0 top-1/2 -translate-y-1/2 w-4 h-0.5 bg-gradient-to-l from-primary to-transparent" />
-            {/* Corner brackets */}
-            <div className="absolute top-0 left-0 w-3 h-3 border-l-2 border-t-2 border-primary" />
-            <div className="absolute top-0 right-0 w-3 h-3 border-r-2 border-t-2 border-primary" />
-            <div className="absolute bottom-0 left-0 w-3 h-3 border-l-2 border-b-2 border-primary" />
-            <div className="absolute bottom-0 right-0 w-3 h-3 border-r-2 border-b-2 border-primary" />
-          </div>
-        </div>
-
-        {/* Floating glitch particles - fewer for compact */}
-        {[...Array(compact ? 6 : 12)].map((_, i) => (
-          <div
-            key={i}
-            className="absolute w-1 h-1 rounded-full animate-glitch-float"
-            style={{
-              left: `${10 + Math.random() * 80}%`,
-              top: `${10 + Math.random() * 80}%`,
-              backgroundColor: i % 2 === 0 ? "#3b82f6" : "#a855f7",
-              animationDelay: `${i * 0.3}s`,
-              boxShadow: `0 0 10px ${i % 2 === 0 ? "#3b82f6" : "#a855f7"}`,
-            }}
-          />
-        ))}
-
-        {/* Hologram waveform bars - smaller for compact */}
+      {[...Array(compact ? 8 : 16)].map((_, i) => (
         <div
-          className={`absolute ${compact ? "bottom-10" : "bottom-16"} left-1/2 -translate-x-1/2 flex items-end gap-1`}
-        >
-          {[...Array(compact ? 10 : 16)].map((_, i) => (
-            <div
-              key={i}
-              className={`${compact ? "w-1" : "w-2"} bg-gradient-to-t from-primary to-secondary rounded-t animate-neon-pulse`}
-              style={{
-                height: `${compact ? 10 + Math.random() * 20 : 20 + Math.random() * 40}px`,
-                animationDelay: `${i * 0.1}s`,
-                opacity: 0.7,
-              }}
-            />
-          ))}
-        </div>
+          key={i}
+          className="absolute w-2 h-2 rounded-full bg-primary animate-data-point"
+          style={{
+            left: `${15 + (i % 4) * 25}%`,
+            top: `${15 + Math.floor(i / 4) * 25}%`,
+            animationDelay: `${i * 0.2}s`,
+            boxShadow: "0 0 10px rgba(59, 130, 246, 0.8)",
+          }}
+        />
+      ))}
 
-        {/* Text with neon glow - smaller for compact */}
-        <div className={`absolute ${compact ? "bottom-3" : "bottom-8"} left-1/2 -translate-x-1/2 text-center`}>
-          <p
-            className={`${compact ? "text-xs" : "text-lg"} font-mono font-medium animate-hologram-flicker`}
-            style={{
-              color: "#3b82f6",
-              textShadow: "0 0 10px #3b82f6, 0 0 20px #3b82f6, 0 0 30px #a855f7",
-            }}
-          >
-            Analyzing...
-          </p>
-        </div>
+      <div className="absolute top-4 left-4 w-8 h-8 border-l-2 border-t-2 border-primary animate-pulse" />
+      <div className="absolute top-4 right-4 w-8 h-8 border-r-2 border-t-2 border-primary animate-pulse" />
+      <div className="absolute bottom-4 left-4 w-8 h-8 border-l-2 border-b-2 border-primary animate-pulse" />
+      <div className="absolute bottom-4 right-4 w-8 h-8 border-r-2 border-b-2 border-primary animate-pulse" />
 
-        {/* Color shifting overlay */}
-        <div className="absolute inset-0 bg-gradient-to-br from-primary/5 via-transparent to-secondary/5 animate-color-shift pointer-events-none" />
+      <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
+        <div className="relative">
+          <div className="w-16 h-0.5 bg-primary/60" />
+          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-0.5 h-16 bg-primary/60" />
+          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-6 h-6 border border-primary rounded-full animate-ping" />
+        </div>
+      </div>
+
+      <div className="absolute bottom-3 left-0 right-0 flex flex-col items-center gap-2">
+        <div className="flex items-center gap-2 font-mono text-xs text-primary">
+          <span className="animate-pulse">●</span>
+          <span className="uppercase tracking-wider">
+            {scanPhase === "grid" && "Mapping Grid..."}
+            {scanPhase === "analyze" && "Analyzing Pixels..."}
+            {scanPhase === "process" && "Processing Data..."}
+          </span>
+        </div>
+        {/* Progress bar */}
+        <div className="w-32 h-1 bg-primary/20 rounded-full overflow-hidden">
+          <div
+            className="h-full bg-gradient-to-r from-primary to-accent transition-all duration-100"
+            style={{ width: `${progress}%` }}
+          />
+        </div>
+        <span className="font-mono text-xs text-muted-foreground">{progress}%</span>
+      </div>
+
+      <div className="absolute top-4 left-4 font-mono text-[10px] text-primary/70 space-y-1">
+        <div>RES: 1920x1080</div>
+        <div>DEPTH: 24-BIT</div>
+        <div className="animate-pulse">SCAN: ACTIVE</div>
+      </div>
+      <div className="absolute top-4 right-4 font-mono text-[10px] text-accent/70 text-right space-y-1">
+        <div>GRID: 64x64</div>
+        <div>NODES: {compact ? 8 : 16}</div>
+        <div className="animate-pulse">AI: ONLINE</div>
       </div>
     </div>
   )
